@@ -1,6 +1,7 @@
 local class = require "lib/class"
 local util = require "lib/util"
 local json = require "lib/json"
+require "lib/turtle"
 
 local all, range, print, println = util.all, util.range, util.print, util.println
 
@@ -21,14 +22,14 @@ local obj = file_to_json("allthemodium.json")
 local item_to_recipe = obj['item_to_recipe']
 local tag_to_item = obj['tag_to_item']
 
-local recipe = item_to_recipe["solarflux:mirror"]
+
 
 function get_item(name, amount)
   local remaining = amount
   local chest = peripheral.call("top","list")
   for i,v in pairs(chest) do
     if v.name == name then
-      peripheral.call("top","pushItems","bottom",i)
+      peripheral.call("top","pushItems","bottom",i,remaining)
       turtle.suckDown()
       remaining = remaining - v.count
       if remaining <= 0 then
@@ -38,7 +39,7 @@ function get_item(name, amount)
   end
 end
 
-function to_item(i)
+function to_item(i, recipe)
   local tag = recipe.ingredients[i].tag
   local item = recipe.ingredients[i].item
   if tag then
@@ -51,10 +52,11 @@ end
 
 function craft(name)
   local n = 1
+  local recipe = item_to_recipe[tArgs[1]]
   for i=1,recipe.height do
     for j=1,recipe.width do
       local slot = j+((i-1)*4)
-      local item = to_item(n)
+      local item = to_item(n, recipe)
       turtle.select(slot)
       get_item(name,1)
       n = n + 1
