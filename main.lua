@@ -1,9 +1,5 @@
 local class = require "lib/class"
-local List = require "lib/list"
-local Set = require "lib/set"
 local util = require "lib/util"
-
-local Ouroboros = require "lib/ouroboros"
 local json = require "lib/json"
 
 local all, range, print, println = util.all, util.range, util.print, util.println
@@ -58,7 +54,7 @@ function craft(name)
   for i=1,recipe.height do
     for j=1,recipe.width do
       local slot = j+((i-1)*4)
-      local item = to_item(n))
+      local item = to_item(n)
       turtle.select(slot)
       get_item(name,1)
       n = n + 1
