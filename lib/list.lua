@@ -16,8 +16,8 @@ function List:__init(iter_tbl_or_item, ...)
     end
   else
     list = {iter_tbl_or_item, ...}
+    self.list = list
   end
-  self.list = list
 end
 
 function List.__index(table, key)
@@ -248,6 +248,10 @@ end
 function List:sort(callable)
   --args(self, List, callable, "function?")
   table.sort(self.list, callable)
+end
+
+function List:to_table()
+  return self.list
 end
 
 local function zeroes(ls,N,...)

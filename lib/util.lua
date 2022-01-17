@@ -10,6 +10,10 @@ function util.all(tbl)
   end
 end
 
+function util.len(tbl)
+  return t.len(tbl)
+end
+
 function util.assertEqual(expected, actual)
   assert(expected == actual, "Expected: "..tostring(expected)..", Actual: "..tostring(actual))
 end
@@ -90,6 +94,13 @@ function util.range(start, stop, inc)
       coroutine.yield(i)
     end
   end)
+end
+
+function util.format(str, ...)
+  local i = 0
+  local args = {...}
+  str = str:gsub("{}", function() i = i + 1 return t.str(args[i]) end)
+  return str
 end
 
 function util.println(str,...)

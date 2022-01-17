@@ -20,7 +20,7 @@ function Search:load_json(filename)
 end
 
 function Search:base_search(key, val, verbose)
-  verbose = verbose or true
+  verbose = verbose or false
   local output = List()
   for i,obj in pairs(self.recipes_json) do
     if obj[key] == val then
@@ -34,21 +34,21 @@ function Search:base_search(key, val, verbose)
 end
 
 function Search:search_display_name(displayName, verbose)
-  verbose = verbose or true
+  verbose = verbose or false
   return self:base_search("outputDisplayName", displayName, verbose)
 end
 
 function Search:search_item(name, verbose)
-  verbose = verbose or true
+  verbose = verbose or false
   return self:base_search("outputName", name, verbose)
 end
 
 function Search:search_tag(tag, verbose)
-  verbose = verbose or true
+  verbose = verbose or false
   if verbose then
     print(self.tags_json[tag])
   end
-  return self.tags_json[tag]
+  return List(all(self.tags_json[tag]))
 end
 
 return Search

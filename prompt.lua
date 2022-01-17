@@ -35,9 +35,12 @@ function Prompt:get_yes_no(prompt, not_valid)
     assert(choice ~= 'q', 'quit')
     loop_count = loop_count + 1
   end
+  return choice == 'y'
 end
 
 function Prompt:pick_choice(prompt, options)
   local choice = self:get_int(prompt, "enter a number between 0 and "..tostring(#options-1))
   return options[choice]
 end
+
+return Prompt

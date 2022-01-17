@@ -5,6 +5,7 @@ local Set = class()
 
 function Set:__init(...)
   self.set = {}
+  self.n = 0
   for i,v in pairs({...}) do
     self:add(v)
   end
@@ -12,7 +13,7 @@ end
 
 function Set:__len()
   --args(self, List)
-  return #self.set
+  return self.n
 end
 
 function Set:__tostring()
@@ -52,15 +53,29 @@ function Set:__add(o)
 end
 
 function Set:add(item)
+  if self.set[item] then
+    return
+  end
   self.set[item] = true
+  self.n = self.n + 1
 end
 
 function Set:pop(item)
-  self.set[item] = nil
+  if item == nil then
+    for k,v in pairs(self.set) do
+      self.set[k] = nil
+      self.n = self.n-1
+      return k
+    end
+  else
+    self.set[item] = nil
+    self.n = self.n - 1
+  end
 end
 
 function Set:clear()
   self.set = {}
+  self.n = 0
 end
 
 function Set:contains(item)
@@ -68,6 +83,10 @@ function Set:contains(item)
     return true
   end
   return false
+end
+
+function Set:to_table()
+  return self.set
 end
 
 return Set

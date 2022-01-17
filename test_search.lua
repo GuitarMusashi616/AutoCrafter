@@ -1,8 +1,7 @@
-local Search = require "search"
 
-local search = Search()
+local Planner = require "Planner"
 
-local util = require "lib/util"
+local planner = Planner()
+planner:plan("Pulverizer")
 
-util.print(search.recipes_json)
-util.print(search.tags_json)
+print(planner)

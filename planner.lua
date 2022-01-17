@@ -1,15 +1,17 @@
 local class = require "lib/class"
 local util = require "lib/util"
 local json = require "lib/json"
+local tbl = require "lib/tbl"
 local List =  require "lib/list"
 local Set = require "lib/set"
 local Search = require "search"
 local Prompt = require "prompt"
 
+
 local search_inst = Search()
 local prompt_inst = Prompt()
 
-local print, println, all, range = util.print, util.println, util.all, util.range
+local print, println, all, range, format = util.print, util.println, util.all, util.range, util.format
 
 local Planner = class()
 
@@ -37,13 +39,13 @@ function Planner:ask_which_recipe(name, skip_solo_recipes, skip_non_crafting)
   if name:find("%u") then
     func = Search.search_display_name
   end
-  local options = func(name, false)
+  local options = func(search_inst, name, false)
   
   if skip_non_crafting then
-    options = options:filter(function(x) x['type'] == 'crafting')
+    options = options:filter(function(x) return x['type'] == 'crafting' end)
   end
   
-  if skip_solo_recipes then and #options == 1 and options[0]['type'] == 'crafting' then
+  if skip_solo_recipes and #options == 1 and options[0]['type'] == 'crafting' then
     println("picked {}", options[0]['ingredients'])
     return options[0]
   end
@@ -59,10 +61,82 @@ function Planner:ask_which_item(tag, skip_solo_tags)
   skip_solo_tags = skip_solo_tags or true
   println("which item for {}?", tag)
   options = search_inst:search_tag(tag, false)
-  if skip_solo_tags
+  if skip_solo_tags and #options == 1 then
+    println("picked {}", options[0])
+    return options[0]
+  end
   
+  for i,option in options(true) do
+    println("{}) {}", i, option)
+  end
+  
+  return prompt_inst:pick_choice("\npick a tag: ", options)
+end
+
+function Planner:ask_if_raw(unique_item)
+  if prompt_inst:get_yes_no("\ncount " .. tostring(unique_item) .. " as a raw material (y/n)? ") then
+    self.raw_materials:add(unique_item)
+  else
+    local recipe = self:ask_which_recipe(unique_item)
+    self.item_to_recipe[unique_item] = recipe
+    self:add_new_ingredients(recipe)
+  end
+end
+
+function Planner:add_new_ingredients(recipe)
+  for i,ing in pairs(recipe['ingredients']) do
+    local length = tbl.len(ing)
+    if length > 1 then
+      error("more than 1 ing {}", ing)
+    elseif length == 1 then
+      self:add_new_ingredient(ing)
+    end
+  end
+end
+
+function Planner:add_new_ingredient(ing)
+  if ing['item'] then
+    local item = ing['item']
+    if not self.item_to_recipe[item] and not self.raw_materials:contains(item) then
+      self.unique_items:add(item)
+    end
+  elseif ing['tag'] then
+    local tag = ing['tag']
+    if not self.tag_to_item[tag] then
+      self.unique_tags:add(tag)
+    end
+  else
+    println("could not add {}", ing)
+  end
+end
+
+function Planner:plan(display_name)
+  self:prompt_link_recipe(display_name)
+  
+  while #self.unique_items > 0 or #self.unique_tags > 0 do
+    local item
+    if #self.unique_items > 0 then
+      item = self.unique_items:pop()
+    else
+      local tag = self.unique_tags:pop()
+      if self.tag_to_item[tag] then
+        
+      else
+        item = self:ask_which_item(tag)
+        self.tag_to_item[tag] = item
+      end
+    end
+    
+    if item and not self.raw_materials:contains(item) then
+      self:ask_if_raw(item)
+    end
+  end
+end
+
+function Planner:__tostring()
+  return format("{}\n{}x {}\n\n{}\n{}\n\n{}", self.raw_materials, self.target_amount, self.target_recipe, self.unique_items, self.unique_tags, self.item_to_recipe)
 end
 
 
-
+return Planner
 
