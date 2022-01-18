@@ -6,59 +6,26 @@ local Set = require 'lib/set'
 local Backpack = require 'lib/backpack'
 local List = require 'lib/list'
 local Ouroboros = require 'lib/ouroboros'
-
+local Node = require "Node"
 
 local print, println, range, all, len, format = util.print, util.println, util.range, util.all, util.len, util.format
 
-local tArgs = {...}
-if #tArgs == 0 then
-  print("Usage: craft <filename> [count]")
-  error()
-end
-
-local filename = tArgs[1]
-local count = tonumber(tArgs[2]) or 1
-
-local plan = json.decode_from(filename)
-
-local ItemStack = class()
-function ItemStack:__init(item, count)
-  self.item = item
+local Algorithm = class()
+function Algorithm:__init(filename, count)
+  self.filename = filename
+  self.plan = json.decode_from(filename)
   self.count = count
+  self.graph = nil
+  self.material_counts = nil
+  self.nodes = nil
+  self.solved = false
 end
 
-local Node = class()
-function Node:__init(item_or_recipe, requested_amount)
-  local recipe = get_recipe(item_or_recipe)
-  self.output_item = recipe['outputName']
-  self.output_amount = recipe['outputAmount']
-  self.inputs = get_inputs(recipe)
-  self.craft_x_times = math.ceil(requested_amount/self.output_amount)
-end
-
-function Node:__tostring()
-  return format("{}x {} -> {}", self.craft_x_times, self.output_item, self.craft_x_times * self.output_amount)
-end
-
-function Node:calculate_required_items()
-  local needed = List()
-  for item, amount in self.inputs() do
-    needed:append(List(item, amount*self.craft_x_times))
-  end
-  return needed
-end
-
-function Node:connect_edges(graph)
-  for item, amount in self.inputs() do
-    graph:add(item, self.output_item)
-  end
-end
-
-function get_recipe(item)
+function Algorithm:get_recipe(item)
   if type(item) == "table" and item['ingredients'] then
     return item
   end
-  local recipe = plan.item_to_recipe[item]
+  local recipe = self.plan.item_to_recipe[item]
   if not recipe then
     print(tostring(item) .. " not found in recipes")
     error()
@@ -66,8 +33,8 @@ function get_recipe(item)
   return recipe
 end
 
-function get_item(tag)
-  local item = plan.tag_to_item[tag]
+function Algorithm:get_item(tag)
+  local item = self.plan.tag_to_item[tag]
   if not item then
     print(tostring(item) .. " not in item_to_tag")
     error()
@@ -75,11 +42,11 @@ function get_item(tag)
   return item
 end
 
-function get_inputs(recipe)
+function Algorithm:get_inputs(recipe)
   local inputs = Backpack()
   for i,obj in pairs(recipe['ingredients']) do
     if obj['tag'] then
-      inputs:add(get_item(obj['tag']))
+      inputs:add(self:get_item(obj['tag']))
     elseif obj['item'] then
       inputs:add(obj['item'])
     end
@@ -87,42 +54,116 @@ function get_inputs(recipe)
   return inputs
 end
 
-function is_raw(item)
-  return plan.raw_materials[item]
+function Algorithm:is_raw(item)
+  return self.plan.raw_materials[item]
 end
 
-print(get_inputs(plan.target_recipe))
-print(plan.target_recipe)
+function Algorithm:item_name_to_node(item_name)
+  if not self.solved then
+    print("must solve algorithm first")
+    error()
+  end
+  local sel_node
+  
+  for node in self.nodes() do
+    sel_node = node
+    if node.output_item == item_name then
+      return node.craft_x_times 
+    end
+  end
+  println("{} does not have {}",sel_node,item_name)
+end
 
-local stack = List(List(plan.target_recipe, count))
-local material_counts = Backpack()
-local nodes = List()
-local graph = Ouroboros.new()
--- get the nodes neighbors, add them to stack
-while #stack > 0 do
-  local new_ls = stack:pop()
-  local new_item, new_required = new_ls[0], new_ls[1]
-  if is_raw(new_item) then
-    material_counts:add(new_item, new_required)
-  else
-    local node = Node(new_item, new_required)
-    node:connect_edges(graph)
-    nodes:append(node)
-    local needed = node:calculate_required_items()
-    stack = stack + needed
+function Algorithm:solve()
+  print(self:get_inputs(self.plan.target_recipe))
+  print(self.plan.target_recipe)
+
+  local stack = List(List(self.plan.target_recipe, self.count))
+  local material_counts = Backpack()
+  local nodes = List()
+  local graph = Ouroboros.new()
+  -- get the nodes neighbors, add them to stack
+  while #stack > 0 do
+    local new_ls = stack:pop()
+    local new_item, new_required = new_ls[0], new_ls[1]
+    if self:is_raw(new_item) then
+      material_counts:add(new_item, new_required)
+    else
+      local recipe = self:get_recipe(new_item)
+      local inputs = self:get_inputs(recipe)
+      local node = Node(recipe, inputs, new_required)
+      node:connect_edges(graph)
+      nodes:append(node)
+      local needed = node:calculate_required_items()
+      stack = stack + needed
+    end
+  end
+  
+  self.material_counts = material_counts
+  self.graph = graph
+  self.nodes = nodes
+  self.solved = true
+end
+
+function Algorithm:save()
+  local h = io.open("materials_needed.txt","w")
+  local string = ""
+  local sort = List()
+
+  for item, count in self.material_counts() do
+    sort:append(List(item, count))
+  end
+  
+  sort:sort(function(a,b) return a[1] > b[1] end)
+  
+  for ls in sort() do
+    local item, count = ls[0],ls[1]
+    string = string .. format("{}x\t{}\n", count, item)
+  end
+  
+  h:write(string)
+  h:close()
+end
+
+function Algorithm:get_order()
+  return self.graph:sort()
+end
+
+function Algorithm:get_recipe_and_craft_x_times_in_order()
+  if not self.solved then
+    print("must solve algorithm first")
+    error()
+  end
+  local i = 0
+  local order = self.graph:sort()
+  return function()
+    i = i + 1
+    if i > #order then
+      return
+    end
+    local item = order[i]
+    while self:is_raw(item) do
+      i = i + 1
+      item = order[i]
+    end
+    return item, self:item_name_to_node(item, self.nodes)
   end
 end
 
-print("\nRAW_MATS")
-print(material_counts)
+function Algorithm:__call()
+  return self:get_recipe_and_craft_x_times_in_order()
+end
 
-print("\nCRAFT_X_TIMES")
-print(nodes)
-
-print("\nORDER_OF_CRAFTING")
-print(graph:sort())
+return Algorithm
 
 
+--[[
+for i,item_name in ipairs(sorted) do
+  if not is_raw(item_name) then
+    --print(item_name, item_name_to_node(item_name,nodes))
+    crafter:craft_x_times(item_name, item_name_to_node(item_name, nodes))
+  end
+end
+]]
+--print(nodes)
 --print(plan.target_recipe)
-
-

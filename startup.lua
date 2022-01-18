@@ -18,4 +18,4 @@ shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/m
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/search.lua")
 
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/algorithm.lua")
-shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/main.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/plan.lua")
