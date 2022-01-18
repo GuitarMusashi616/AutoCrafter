@@ -5,5 +5,5 @@ shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/m
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/util.lua")
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/tbl.lua")
 shell.run("cd ..")
-shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/main.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/craft.lua")
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/allthemodium.json")
