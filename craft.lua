@@ -7,22 +7,14 @@ local all, range, print, println = util.all, util.range, util.print, util.printl
 
 local tArgs = {...}
 
-function file_to_json(filename)
-  local h = io.open(filename)
-  local string = h:read("*all")
-  h:close()
-  return json.decode(string)
+if #tArgs == 0 then
+  print("Usage: craft <filename> <item> [amount]")
+  error()
 end
 
---local recipes = file_to_json("resources/recipes.json")
---local tags = file_to_json("resources/tags.json")
-
-
-local obj = file_to_json("allthemodium.json")
+local obj = json.decode_from(tArgs[1])
 local item_to_recipe = obj['item_to_recipe']
 local tag_to_item = obj['tag_to_item']
-
-
 
 function get_item(name, amount)
   local remaining = amount
@@ -50,29 +42,45 @@ function to_item(i, recipe)
   end
 end
 
-function craft(name)
+function craft(name, amount)
   local n = 1
-  local recipe = item_to_recipe[tArgs[1]]
+  local recipe = item_to_recipe[tArgs[2]]
   for i=1,recipe.height do
     for j=1,recipe.width do
       local slot = j+((i-1)*4)
       local item = to_item(n, recipe)
       turtle.select(slot)
-      get_item(name,1)
+      get_item(name, amount)
       n = n + 1
     end
   end
   turtle.craft()
-  turtle.select(1)
   turtle.dropUp()
+  clear_inv()
 end
 
-if #tArgs == 0 or #tArgs > 2 then
-  print("Usage: craft <item> [amount]")
-elseif #tArgs == 1 then
-  craft(tArgs[1],1)
-else
-  craft(tArgs[1],tonumber(tArgs[2]))
+function clear_inv()
+  for i=1,16 do
+    if turtle.getItemCount(i) > 0 then
+      turtle.select(i)
+      turtle.dropUp()
+    end
+  end
+end
+
+function craft_x_times(name, amount)
+  local remaining = amount
+  while remaining > 64 do
+    craft(name, 64)
+    remaining = remaining - 64
+  end
+  craft(name, remaining)
+end
+
+if #tArgs == 2 then
+  craft_x_times(tArgs[2],1)
+elseif #tArgs == 3 then
+  craft_x_times(tArgs[2],tonumber(tArgs[3]))
 end
 
 

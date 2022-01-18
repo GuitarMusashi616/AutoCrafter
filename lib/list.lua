@@ -14,6 +14,7 @@ function List:__init(iter_tbl_or_item, ...)
     for v in iter do
       table.insert(list, v)
     end
+    self.list = list
   else
     list = {iter_tbl_or_item, ...}
     self.list = list

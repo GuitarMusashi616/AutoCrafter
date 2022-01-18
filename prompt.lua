@@ -3,7 +3,7 @@ local json = require "lib/json"
 local List = require "lib/list"
 local util = require "lib/util"
 
-local print, range, all = util.print, util.range, util.all
+local print, println, range, all = util.print, util.println, util.range, util.all
 
 local Prompt = class()
 
@@ -38,9 +38,33 @@ function Prompt:get_yes_no(prompt, not_valid)
   return choice == 'y'
 end
 
-function Prompt:pick_choice(prompt, options)
-  local choice = self:get_int(prompt, "enter a number between 0 and "..tostring(#options-1))
-  return options[choice]
+function Prompt:list_options(options, start_i, end_i)
+  for i,option in options(true) do
+    if start_i <= i and i < end_i then
+      println("{}) {}", i, option)
+    end
+  end
+end
+
+function Prompt:pick_choice(prompt, options, limit)
+  limit = limit or 10
+  local index = 0
+  print("'next' for more options, 'q' to quit")
+  self:list_options(options, index, index+limit-1)
+  while true do
+    io.write(prompt)
+    local choice = io.read()
+    assert(choice ~= 'q', 'quit')
+    local num = tonumber(choice)
+    if choice == 'next' or choice == 'n' then
+      index = index + limit
+      self:list_options(options, index, index+limit)
+    elseif num and 0 <= num and num < #options then
+      return options[num]
+    else
+      print("enter a number between 0 and "..tostring(#options-1))
+    end
+  end
 end
 
 return Prompt

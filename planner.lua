@@ -50,9 +50,9 @@ function Planner:ask_which_recipe(name, skip_solo_recipes, skip_non_crafting)
     return options[0]
   end
   
-  for i, option in options(true) do
-    println("{}) {} {}", i, option['type'], option['ingredients'])
-  end
+  --for i, option in options(true) do
+  --  println("{}) {} {}", i, option['type'], option['ingredients'])
+  --end
   
   return prompt_inst:pick_choice("\npick a recipe: ", options)
 end
@@ -64,10 +64,6 @@ function Planner:ask_which_item(tag, skip_solo_tags)
   if skip_solo_tags and #options == 1 then
     println("picked {}", options[0])
     return options[0]
-  end
-  
-  for i,option in options(true) do
-    println("{}) {}", i, option)
   end
   
   return prompt_inst:pick_choice("\npick a tag: ", options)
@@ -131,6 +127,18 @@ function Planner:plan(display_name)
       self:ask_if_raw(item)
     end
   end
+end
+
+function Planner:save(filename)
+  local h = io.open(filename, "w")
+  local obj = {}
+  obj.item_to_recipe = self.item_to_recipe
+  obj.tag_to_item = self.tag_to_item
+  obj.raw_materials = self.raw_materials:to_table()
+  obj.target_recipe = self.target_recipe
+  
+  h:write(json.encode(obj))
+  h:close()
 end
 
 function Planner:__tostring()

@@ -384,5 +384,12 @@ function json.decode(str)
   return res
 end
 
+function json.decode_from(filename)
+  local h = io.open(filename, "r")
+  local string = h:read("*all")
+  h:close()
+  return json.decode(string)  
+end
+
 
 return json

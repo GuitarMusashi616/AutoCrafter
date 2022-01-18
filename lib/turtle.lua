@@ -16,6 +16,11 @@ function turtle.suckDown()
   print("suckDown")
 end
 
+function turtle.getItemCount(i)
+  print("getItemCount")
+  return 0
+end
+
 peripheral = {}
 
 function peripheral.call()
