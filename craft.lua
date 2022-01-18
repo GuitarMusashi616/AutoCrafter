@@ -2,7 +2,7 @@ local class = require "lib/class"
 local util = require "lib/util"
 local json = require "lib/json"
 
-local all, range, print, println = util.all, util.range, util.print, util.println
+local all, range, len, print, println = util.all, util.range, util.len, util.print, util.println
 
 local Craft = class()
 
@@ -38,21 +38,30 @@ function Craft:to_item(i, recipe)
   end
 end
 
-function Craft:craft(name, amount)
-  if amount > 64 then
-    error("use craft_x_times to craft more than 64")
-  end
+function Craft:place_recipe_into_grid(recipe)
   local n = 1
-  local recipe = self.item_to_recipe[name]
+  local remaining = len(recipe['ingredients'])
   for i=1,recipe.height do
     for j=1,recipe.width do
       local slot = j+((i-1)*4)
       local item = self:to_item(n, recipe)
       turtle.select(slot)
       self:get_item(item, amount)
+      remaining = remaining - 1
+      if remaining <= 0 then
+        return
+      end
       n = n + 1
     end
   end
+end
+
+function Craft:craft(name, amount)
+  if amount > 64 then
+    error("use craft_x_times to craft more than 64")
+  end
+  local recipe = self.item_to_recipe[name]
+  self:place_recipe_into_grid(recipe)
   turtle.craft()
   turtle.dropUp()
   self:clear_inv()
