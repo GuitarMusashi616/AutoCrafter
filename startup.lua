@@ -7,3 +7,10 @@ shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/m
 shell.run("cd ..")
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/craft.lua")
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/allthemodium.json")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/rollup.lua")
+
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/planner.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/prompt.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/search.lua")
+
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/algorithm.lua")

@@ -1,4 +1,4 @@
-local json = require "json"
+local json = require "lib/json"
 
 function combine(tbl, other)
   for k,v in pairs(other) do

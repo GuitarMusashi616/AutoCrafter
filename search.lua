@@ -2,14 +2,15 @@ local class = require "lib/class"
 local json = require "lib/json"
 local List = require "lib/list"
 local util = require "lib/util"
+require "rollup"
 
 local print, range, all = util.print, util.range, util.all
 
 local Search = class()
 
 function Search:__init()
-  self.recipes_json = self:load_json("resources/recipes.json")
-  self.tags_json = self:load_json("resources/tags.json")
+  self.recipes_json = get_recipes()
+  self.tags_json = get_tags()
 end
 
 function Search:load_json(filename)
