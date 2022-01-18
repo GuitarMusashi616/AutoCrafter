@@ -46,11 +46,12 @@ function Prompt:list_options(options, start_i, end_i)
   end
 end
 
-function Prompt:pick_choice(prompt, options, limit)
+function Prompt:pick_choice(prompt, options, options_to_display, limit)
   limit = limit or 10
+  options_to_display = options_to_display or options
   local index = 0
   print("'next' for more options, 'q' to quit")
-  self:list_options(options, index, index+limit-1)
+  self:list_options(options_to_display, index, index+limit)
   while true do
     io.write(prompt)
     local choice = io.read()
@@ -58,7 +59,7 @@ function Prompt:pick_choice(prompt, options, limit)
     local num = tonumber(choice)
     if choice == 'next' or choice == 'n' then
       index = index + limit
-      self:list_options(options, index, index+limit)
+      self:list_options(options_to_display, index, index+limit)
     elseif num and 0 <= num and num < #options then
       return options[num]
     else

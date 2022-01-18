@@ -7,8 +7,7 @@ local Set = require "lib/set"
 local Search = require "search"
 local Prompt = require "prompt"
 
-
-local search_inst = Search()
+local search_inst = Search(true)
 local prompt_inst = Prompt()
 
 local print, println, all, range, format = util.print, util.println, util.all, util.range, util.format
@@ -39,28 +38,22 @@ function Planner:ask_which_recipe(name, skip_solo_recipes, skip_non_crafting)
   if name:find("%u") then
     func = Search.search_display_name
   end
-  local options = func(search_inst, name, false)
+  local options = func(search_inst, name, skip_non_crafting)
   
-  if skip_non_crafting then
-    options = options:filter(function(x) return x['type'] == 'crafting' end)
-  end
+  local options_to_display = search_inst:get_backpack_list_from(options)
   
   if skip_solo_recipes and #options == 1 and options[0]['type'] == 'crafting' then
-    println("picked {}", options[0]['ingredients'])
+    println("picked {}", options_to_display[0])
     return options[0]
   end
   
-  --for i, option in options(true) do
-  --  println("{}) {} {}", i, option['type'], option['ingredients'])
-  --end
-  
-  return prompt_inst:pick_choice("\npick a recipe: ", options)
+  return prompt_inst:pick_choice("\npick a recipe: ", options, options_to_display)
 end
 
 function Planner:ask_which_item(tag, skip_solo_tags)
   skip_solo_tags = skip_solo_tags or true
   println("which item for {}?", tag)
-  options = search_inst:search_tag(tag, false)
+  options = search_inst:search_tag(tag)
   if skip_solo_tags and #options == 1 then
     println("picked {}", options[0])
     return options[0]
@@ -69,7 +62,14 @@ function Planner:ask_which_item(tag, skip_solo_tags)
   return prompt_inst:pick_choice("\npick a tag: ", options)
 end
 
-function Planner:ask_if_raw(unique_item)
+function Planner:ask_if_raw(unique_item, skip_no_recipe_items)
+  skip_no_recipe_items = skip_no_recipe_items or true
+  if skip_no_recipe_items and #search_inst:search_item(unique_item) == 0 then
+    self.raw_materials:add(unique_item)
+    print("added "..tostring(unique_item) .." as a raw material")
+    return
+  end
+  
   if prompt_inst:get_yes_no("\ncount " .. tostring(unique_item) .. " as a raw material (y/n)? ") then
     self.raw_materials:add(unique_item)
   else

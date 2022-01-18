@@ -88,18 +88,21 @@ end]]
 t = require "lib/tbl"
 local n = 0
 -- show how many recipes have ings with inglist
-for i, obj in pairs(ss.recipes_json) do
-  if obj['type'] == 'crafting' then
-    local inglist = obj['ingredients']
-    for ing in all(inglist) do
-      if len(ing) > 1 then
-        print(inglist)
-        n = n + 1
-        break
-      end
-    end
-  end
-end
+--for i, obj in pairs(ss.recipes_json) do
+--  if obj['type'] == 'crafting' then
+--    local inglist = obj['ingredients']
+--    for ing in all(inglist) do
+--      if len(ing) > 1 then
+--        print(inglist)
+--        n = n + 1
+--        break
+--      end
+--    end
+--  end
+--end
+
+-- simplest is if its got more than option for ingredient then
+-- take the first ingredient?
 
 print(n, '/', len(ss.recipes_json))
 

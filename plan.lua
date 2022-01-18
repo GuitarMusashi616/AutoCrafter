@@ -1,5 +1,4 @@
 
-
 local tArgs = {...}
 if #tArgs == 0 then
   print('Usage: plan <item>')
@@ -16,5 +15,4 @@ local planner = Planner()
 planner:plan(display_name)
 planner:save(filename)
 print(filename .. " saved...") 
-
-
+print("craft "..filename.." [count] to craft it")
