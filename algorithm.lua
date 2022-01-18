@@ -19,7 +19,7 @@ end
 local filename = tArgs[1]
 local count = tonumber(tArgs[2]) or 1
 
-local plan = json.decode_from('pulverizer.plan')
+local plan = json.decode_from(filename)
 
 local ItemStack = class()
 function ItemStack:__init(item, count)
