@@ -8,7 +8,12 @@ local Craft = class()
 
 function Craft:__init(filename)
   local obj = json.decode_from(filename)
+  local output_recipe = obj["target_recipe"]
+  local output_name = output_recipe["outputName"]
+  
   self.item_to_recipe = obj['item_to_recipe']
+  self.item_to_recipe[output_name] = output_recipe
+  
   self.tag_to_item = obj['tag_to_item']
 end
 
@@ -38,7 +43,7 @@ function Craft:to_item(i, recipe)
   end
 end
 
-function Craft:place_recipe_into_grid(recipe)
+function Craft:place_recipe_into_grid(recipe, amount)
   local n = 1
   local remaining = len(recipe['ingredients'])
   for i=1,recipe.height do
@@ -61,7 +66,7 @@ function Craft:craft(name, amount)
     error("use craft_x_times to craft more than 64")
   end
   local recipe = self.item_to_recipe[name]
-  self:place_recipe_into_grid(recipe)
+  self:place_recipe_into_grid(recipe, amount)
   turtle.craft()
   turtle.dropUp()
   self:clear_inv()
@@ -86,5 +91,3 @@ function Craft:craft_x_times(name, amount)
 end
 
 return Craft
-
-
