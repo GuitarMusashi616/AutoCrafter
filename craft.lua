@@ -1,6 +1,7 @@
 local Algorithm = require "lib/algorithm"
 local Crafter = require "lib/crafter"
 local util = require "lib/util"
+local silo = require "lib/silo"
 
 local print, println, format = util.print, util.println, util.format
 
@@ -25,6 +26,11 @@ local crafter = Crafter(plan_file)
 
 local missing = crafter:supply_chest_contains(alg.material_counts)
 -- if its not empty then print out whats still required otherwise just craft everything
+
+-- check if connected to chests
+-- basically if chests are connected then it pulls from (all of) them, subtracts from the backpack
+silo.get_from(missing)
+
 if not missing:is_empty() then
   local string = "Not enough items!\nPlease collect the following...\n"
   alg:save(missing, string)
