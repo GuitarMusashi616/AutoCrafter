@@ -6,7 +6,7 @@ local Set = require 'lib/set'
 local Backpack = require 'lib/backpack'
 local List = require 'lib/list'
 local Ouroboros = require 'lib/ouroboros'
-local Node = require "Node"
+local Node = require 'Node'
 
 local print, println, range, all, len, format = util.print, util.println, util.range, util.all, util.len, util.format
 
