@@ -1,6 +1,7 @@
 local Set = require "lib/set"
 local util = require "lib/util"
 local List = require "lib/list"
+local Backpack = require "lib/backpack"
 
 local print, range, all = util.print, util.range, util.all
 
@@ -15,6 +16,15 @@ for i = 1,20 do
   print(#set)
   print(set)
 end
+
+
+local backpack = Backpack()
+backpack:add(5)
+backpack:add(10)
+backpack:add("stuff")
+print(backpack)
+
+
 
 local nbt = require "lib/nbt"
 

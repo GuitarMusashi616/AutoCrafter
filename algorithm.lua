@@ -12,6 +12,7 @@ local print, println, range, all, len, format = util.print, util.println, util.r
 
 local Algorithm = class()
 function Algorithm:__init(filename, count)
+  count = count or 1
   self.filename = filename
   self.plan = json.decode_from(filename)
   self.count = count
@@ -58,22 +59,6 @@ function Algorithm:is_raw(item)
   return self.plan.raw_materials[item]
 end
 
-function Algorithm:item_name_to_node(item_name)
-  if not self.solved then
-    print("must solve algorithm first")
-    error()
-  end
-  local sel_node
-  
-  for node in self.nodes() do
-    sel_node = node
-    if node.output_item == item_name then
-      return node.craft_x_times 
-    end
-  end
-  println("{} does not have {}",sel_node,item_name)
-end
-
 function Algorithm:solve()
   --print(self:get_inputs(self.plan.target_recipe))
   --print(self.plan.target_recipe)
@@ -103,6 +88,15 @@ function Algorithm:solve()
   self.graph = graph
   self.nodes = nodes
   self.solved = true
+  self.craft_x_counts = self:sum_up_times_node_crafted()
+end
+
+function Algorithm:sum_up_times_node_crafted()
+  local craft_x_counts = Backpack()
+  for node in self.nodes() do
+    craft_x_counts:add(node.output_item, node.craft_x_times)
+  end
+  return craft_x_counts
 end
 
 function Algorithm:save(backpack, prompt)
@@ -148,7 +142,7 @@ function Algorithm:get_recipe_and_craft_x_times_in_order()
       i = i + 1
       item = order[i]
     end
-    return item, self:item_name_to_node(item, self.nodes)
+    return item, self.craft_x_counts:get_count(item)
   end
 end
 

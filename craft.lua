@@ -26,7 +26,7 @@ local crafter = Crafter(plan_file)
 local missing = crafter:supply_chest_contains(alg.material_counts)
 -- if its not empty then print out whats still required otherwise just craft everything
 if not missing:is_empty() then
-  local string = "Not enough items! The following materials could not be found...\n"
+  local string = "Not enough items!\nPlease collect the following...\n"
   alg:save(missing, string)
   shell.run("edit materials_needed.txt")
   error()

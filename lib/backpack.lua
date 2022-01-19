@@ -23,9 +23,13 @@ function Backpack:add(item, count)
 end
 
 function Backpack:remove(item, count)
+  count = count or 1
   assert(self.backpack[item], tostring(item) .. " not in backpack")
   assert(self.backpack[item] >= count, "not enough " .. tostring(item) .. " in backpack")
-  self.backpack[item] = self.backpack[item] - 1
+  self.backpack[item] = self.backpack[item] - count
+  if self.backpack[item] <= 0 then
+    self.backpack[item] = nil
+  end
 end
 
 function Backpack:contains(item, count)

@@ -2,7 +2,7 @@ local class = require "lib/class"
 local util = require "lib/util"
 local json = require "lib/json"
 local Backpack = require "lib/backpack"
-require "lib/turtle"
+
 
 local all, range, len, print, println = util.all, util.range, util.len, util.print, util.println
 
@@ -70,7 +70,7 @@ function Crafter:craft(name, amount)
   local recipe = self.item_to_recipe[name]
   self:place_recipe_into_grid(recipe, amount)
   turtle.craft()
-  turtle.dropUp()
+  --turtle.dropUp()
   self:clear_inv()
 end
 
@@ -101,10 +101,16 @@ function Crafter:supply_chest_contains(backpack)
   
   local chest = peripheral.call("top","list")
   -- for chest item that is needed remove from backpack, if backpack aint empty thats whats still needed
+  local bchest = Backpack()
   for slot, item in pairs(chest) do
-    if missing:contains(item.name) then
-      local x = math.min(missing:get_count(item.name), item.count)
-      missing:remove(item.name, x) -- remove all of the item from backpack or as many as are present in the chest
+    bchest:add(item.name, item.count)
+  end
+  
+  for item, count in bchest() do
+    if missing:contains(item) then
+      local x = math.min(missing:get_count(item), count)
+      print(item, x)
+      missing:remove(item,x) -- remove all of the item from backpack or as many as are present in the chest
     end
   end
   return missing
