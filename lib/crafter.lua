@@ -20,14 +20,18 @@ function Crafter:__init(filename)
 end
 
 function Crafter:get_item(name, amount)
+  if amount > 64 then
+    print("get_item amount max 64, called with amount: "..tostring(amount))
+    error()
+  end
   local remaining = amount
   local chest = peripheral.call("top","list")
   for i,v in pairs(chest) do
     if v.name == name then
       peripheral.call("top","pushItems","bottom",i,remaining)
-      turtle.suckDown()
       remaining = remaining - v.count
       if remaining <= 0 then
+        turtle.suckDown()
         return
       end
     end
@@ -109,22 +113,7 @@ function Crafter:item_ings_min_stack_size(name)
   end
   return min
 end
---[[
-function Crafter:ing_max_stack_size(name)
-  local slot = 1
-  while true do
-    local item_detail = peripheral.call("top","getItemDetail",slot)
-    if item_detail and item_detail.name == name then
-      return item_detail.maxCount
-    end
-    slot = slot + 1
-    if slot > 500 then
-      print("chest is either missing "..name.." or has more than 500 slots")
-      error()
-    end
-  end
-end
-]]
+
 function Crafter:craft_x_times(name, amount, amount_at_a_time)
   amount_at_a_time = amount_at_a_time or 64
   local min_stack_size = self:item_ings_min_stack_size(name)
