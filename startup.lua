@@ -15,6 +15,7 @@ shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/m
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/search.lua")
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/algorithm.lua")
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/node.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/silo.lua")
 shell.run("cd ..")
 
 
