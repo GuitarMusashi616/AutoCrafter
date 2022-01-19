@@ -83,13 +83,49 @@ function Crafter:clear_inv()
   end
 end
 
-function Crafter:craft_x_times(name, amount)
-  local remaining = amount
-  while remaining > 64 do
-    self:craft(name, 64)
-    remaining = remaining - 64
+function Crafter:item_ings_min_stack_size(name)
+  local recipe = self.item_to_recipe[name]
+  local remaining = len(recipe['ingredients'])
+  local min = 1/0
+  for i=1,remaining do
+    local item = self:to_item(i, recipe)
+    local max_stack_size = self:ing_max_stack_size(item)
+    if max_stack_size < min then
+      min = max_stack_size
+    end
   end
-  self:craft(name, remaining)
+  return min
+end
+
+function Crafter:ing_max_stack_size(name)
+  local slot = 1
+  while true do
+    local item_detail = peripheral.call("up","getItemDetail",slot)
+    if item_detail.name == name then
+      return item_detail.maxCount
+    end
+    slot = slot + 1
+    if slot > 500 then
+      print("chest is either missing "..name.." or has more than 500 slots")
+      error()
+    end
+  end
+end
+
+function Crafter:craft_x_times(name, amount, amount_at_a_time)
+  amount_at_a_time = amount_at_a_time or 64
+  local min_stack_size = self:item_ings_min_stack_size(name)
+  if min_stack_size < amount_at_a_time then
+    amount_at_a_time = min_stack_size
+  end
+  local remaining = amount
+  while remaining > amount_at_a_time do
+    self:craft(name, amount_at_a_time)
+    remaining = remaining - amount_at_a_time
+  end
+  if remaining > 0 then
+    self:craft(name, remaining)
+  end
 end
 
 function Crafter:supply_chest_contains(backpack)
