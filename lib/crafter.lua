@@ -2,7 +2,7 @@ local class = require "lib/class"
 local util = require "lib/util"
 local json = require "lib/json"
 local Backpack = require "lib/backpack"
-
+local Set = require "lib/set"
 
 local all, range, len, print, println = util.all, util.range, util.len, util.print, util.println
 
@@ -83,25 +83,38 @@ function Crafter:clear_inv()
   end
 end
 
+function Crafter:find_slot(chest, item)
+  for i,v in pairs(chest) do
+    if v.name == name then
+      return i
+    end
+  end
+end
+
 function Crafter:item_ings_min_stack_size(name)
   local recipe = self.item_to_recipe[name]
   local remaining = len(recipe['ingredients'])
   local min = 1/0
+  local chest = peripheral.call("top","list")
+  
   for i=1,remaining do
     local item = self:to_item(i, recipe)
-    local max_stack_size = self:ing_max_stack_size(item)
-    if max_stack_size < min then
+    local slot = self:find_slot(chest, item)
+    local max_stack_size = peripheral.call("top","getItemDetail",slot).maxCount
+    if max_stack_size == 1 then
+      return max_stack_size
+    elseif max_stack_size < min then
       min = max_stack_size
     end
   end
   return min
 end
-
+--[[
 function Crafter:ing_max_stack_size(name)
   local slot = 1
   while true do
-    local item_detail = peripheral.call("up","getItemDetail",slot)
-    if item_detail.name == name then
+    local item_detail = peripheral.call("top","getItemDetail",slot)
+    if item_detail and item_detail.name == name then
       return item_detail.maxCount
     end
     slot = slot + 1
@@ -111,7 +124,7 @@ function Crafter:ing_max_stack_size(name)
     end
   end
 end
-
+]]
 function Crafter:craft_x_times(name, amount, amount_at_a_time)
   amount_at_a_time = amount_at_a_time or 64
   local min_stack_size = self:item_ings_min_stack_size(name)
