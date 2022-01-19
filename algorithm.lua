@@ -75,8 +75,8 @@ function Algorithm:item_name_to_node(item_name)
 end
 
 function Algorithm:solve()
-  print(self:get_inputs(self.plan.target_recipe))
-  print(self.plan.target_recipe)
+  --print(self:get_inputs(self.plan.target_recipe))
+  --print(self.plan.target_recipe)
 
   local stack = List(List(self.plan.target_recipe, self.count))
   local material_counts = Backpack()

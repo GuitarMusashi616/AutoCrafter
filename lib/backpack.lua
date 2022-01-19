@@ -28,6 +28,29 @@ function Backpack:remove(item, count)
   self.backpack[item] = self.backpack[item] - 1
 end
 
+function Backpack:contains(item, count)
+  count = count or 1
+  if self.backpack[item] and self.backpack[item] >= count then
+    return true
+  end
+  return false
+end
+
+function Backpack:is_empty()
+  if next(self.backpack) then
+    return false
+  end
+  return true
+end
+
+function Backpack:get_count(item)
+  if not self.backpack[item] then
+    return 0
+  else
+    return self.backpack[item]
+  end
+end
+
 function Backpack:__eq(other)
   local k = nil
   local l = nil
