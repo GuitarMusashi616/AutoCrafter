@@ -83,7 +83,7 @@ function Crafter:clear_inv()
   end
 end
 
-function Crafter:find_slot(chest, item)
+function Crafter:find_slot(chest, name)
   for i,v in pairs(chest) do
     if v.name == name then
       return i
