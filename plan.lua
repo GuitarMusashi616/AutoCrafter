@@ -1,3 +1,4 @@
+local Planner = require "lib/Planner"
 
 local tArgs = {...}
 if #tArgs == 0 then
@@ -9,7 +10,6 @@ end
 local display_name = table.concat(tArgs, " ")
 local filename = table.concat(tArgs, "_"):lower().. ".plan"
 
-local Planner = require "Planner"
 local planner = Planner()
 
 planner:plan(display_name)

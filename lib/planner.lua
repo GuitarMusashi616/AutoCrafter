@@ -4,10 +4,10 @@ local json = require "lib/json"
 local tbl = require "lib/tbl"
 local List =  require "lib/list"
 local Set = require "lib/set"
-local Search = require "search"
-local Prompt = require "prompt"
+local Search = require "lib/search"
+local Prompt = require "lib/prompt"
 
-local search_inst = Search(true)
+local search_inst = Search()
 local prompt_inst = Prompt()
 
 local print, println, all, range, format = util.print, util.println, util.all, util.range, util.format

@@ -3,7 +3,7 @@ local json = require "lib/json"
 local util = require "lib/util"
 local List = require "lib/list"
 local Backpack = require "lib/backpack"
-local Rollup = require "rollup"
+local Rollup = require "lib/rollup"
 
 local print, range, all = util.print, util.range, util.all
 local dl = Rollup()

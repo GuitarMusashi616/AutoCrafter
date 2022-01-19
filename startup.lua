@@ -8,16 +8,15 @@ shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/m
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/ouroboros.lua")
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/set.lua")
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/backpack.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/crafter.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/rollup.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/planner.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/prompt.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/search.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/algorithm.lua")
+shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/lib/node.lua")
 shell.run("cd ..")
-shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/crafter.lua")
-shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/rollup.lua")
 
-shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/planner.lua")
-shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/prompt.lua")
-shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/search.lua")
-
-shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/algorithm.lua")
-shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/node.lua")
 
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/plan.lua")
 shell.run("wget https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/craft.lua")

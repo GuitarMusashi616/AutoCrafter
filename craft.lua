@@ -1,5 +1,5 @@
-local Algorithm = require "algorithm"
-local Crafter = require "crafter"
+local Algorithm = require "lib/algorithm"
+local Crafter = require "lib/crafter"
 local util = require "lib/util"
 
 local print, println, format = util.print, util.println, util.format
