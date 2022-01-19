@@ -2,9 +2,9 @@
 Turtle that automatically crafts any recipe in All The Mods 6
 
 ~~~
-Usage: plan <item>                          -- finds the crafting recipe and turns it into a .plan file
+Usage: plan  <item>                         -- finds the crafting recipe and turns it into a .plan file
        craft <file> [times]                 -- crafts the .plan file recipe [times] times (once by default)
-       plan Allthemodium Solar Panel        -- example
+       plan  Allthemodium Solar Panel       -- example
        craft allthemodium_solar_panel.plan  -- example
 ~~~
 
