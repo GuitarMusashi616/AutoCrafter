@@ -147,7 +147,7 @@ function Crafter:supply_chest_contains(backpack)
   for item, count in bchest() do
     if missing:contains(item) then
       local x = math.min(missing:get_count(item), count)
-      print(item, x)
+      --print(item, x)
       missing:remove(item,x) -- remove all of the item from backpack or as many as are present in the chest
     end
   end
