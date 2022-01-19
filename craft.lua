@@ -26,14 +26,9 @@ local crafter = Crafter(plan_file)
 local missing = crafter:supply_chest_contains(alg.material_counts)
 -- if its not empty then print out whats still required otherwise just craft everything
 if not missing:is_empty() then
-  local h = io.open("materials_required.txt","w")
   local string = "Not enough items! The following materials could not be found...\n"
-  for item,count in missing() do
-    string = string .. format("{}x {}\n", count, item)
-  end
-  h:write(string)
-  h:close()
-  shell.run("edit materials_required.txt")
+  alg:save(missing, string)
+  shell.run("edit materials_needed.txt")
   error()
 end
 

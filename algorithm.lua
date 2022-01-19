@@ -105,12 +105,14 @@ function Algorithm:solve()
   self.solved = true
 end
 
-function Algorithm:save()
+function Algorithm:save(backpack, prompt)
+  prompt = prompt or ""
+  backpack = backpack or self.material_counts
   local h = io.open("materials_needed.txt","w")
-  local string = ""
+  local string = prompt
   local sort = List()
 
-  for item, count in self.material_counts() do
+  for item, count in backpack() do
     sort:append(List(item, count))
   end
   
