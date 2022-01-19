@@ -1,4 +1,4 @@
-local Planner = require "lib/Planner"
+local Planner = require "lib/planner"
 
 local tArgs = {...}
 if #tArgs == 0 then
