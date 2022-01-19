@@ -15,8 +15,9 @@ Usage: plan  <item>                         -- finds the crafting recipe and tur
 ```
 wget run https://github.com/GuitarMusashi616/AutoCrafter/blob/master/startup.lua
 ```
+
 #### Demo:
-https://www.youtube.com/watch?v=zLDyCdI7XCw
+https://www.youtube.com/watch?v=zLDyCdI7XCw&t=7m05s
 
 #### Required Mods:
 * cc-tweaked-1.16.5-1.100.1.jar
