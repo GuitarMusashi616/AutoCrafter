@@ -13,3 +13,12 @@ print(#compressed)
 f:write(compressed)
 f:close()
 
+local json_str = lualzw.decompress(compressed)
+
+
+print(#json_str)
+
+-- basically just make it http get the resources file
+-- then lzw uncompress it
+-- then json decode it
+-- tada

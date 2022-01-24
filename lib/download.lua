@@ -1,11 +1,12 @@
 local class = require "lib/class"
 local json = require "lib/json"
 local lzw = require "lib/lualzw"
-
+local socket = require("socket")
+local http = require("socket.http")
 
 local Download = class()
 
-function Download:_init()
+function Download:__init()
   self.recipes_url = "https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/compresstest/resources/recipes.lzw"
   self.tags_url = "https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/compresstest/resources/tags.lzw"
 end
@@ -19,7 +20,7 @@ function Download:get_string(url)
 end
 
 function Download:lzw_json_as_tbl(url)
-  local data_str = self:get_string(url)
+  local data_str = http.request(url)
   local json_str = lzw.decompress(data_str)
   return json.decode(json_str)
 end
@@ -36,4 +37,11 @@ function Download:get_tags()
   return self:lzw_json_as_tbl(self.tags_url)
 end
 
-return Download
+--return Download
+
+
+dl = Download()
+
+recipes = dl:get_recipes()
+
+print(#recipes)
