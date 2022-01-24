@@ -3,28 +3,25 @@ local json = require "lib/json"
 local util = require "lib/util"
 local List = require "lib/list"
 local Backpack = require "lib/backpack"
-local Rollup = require "lib/rollup"
+local Download = require "lib/download"
 
 local print, range, all = util.print, util.range, util.all
-local dl = Rollup()
+
+local dl = Download()
 
 local Search = class()
 
 function Search:__init(no_internet)
+  self.recipes_url = "https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/resources/recipes.json"
+  self.tags_url = "https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/resources/tags.json"
+  
   if no_internet then
     self.recipes_json = json.decode_from("resources/recipes.json")
     self.tags_json = json.decode_from("resources/tags.json")
   else
-    self.recipes_json = dl:get_recipes()
-    self.tags_json = dl:get_tags()
+    self.recipes_json = dl:get_json(self.recipes_url)
+    self.tags_json = dl:get_json(self.tags_url)
   end
-end
-
-function Search:load_json(filename)
-  local h = io.open(filename)
-  local string = h:read("*all")
-  h:close()
-  return json.decode(string)
 end
 
 function Search:base_search(key, val, verbose)
