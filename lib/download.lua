@@ -36,3 +36,4 @@ function Download:get_tags()
   return self:lzw_json_as_tbl(self.tags_url)
 end
 
+return Download

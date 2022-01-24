@@ -24,6 +24,7 @@ shell.run("wget "..ROOT..USER..REPO..BRANCH.."lib/node.lua")
 shell.run("wget "..ROOT..USER..REPO..BRANCH.."lib/silo.lua")
 shell.run("wget "..ROOT..USER..REPO..BRANCH.."lib/lualzw.lua")
 shell.run("wget "..ROOT..USER..REPO..BRANCH.."lib/silo.lua")
+shell.run("wget "..ROOT..USER..REPO..BRANCH.."lib/download.lua")
 shell.run("cd ..")
 
 
