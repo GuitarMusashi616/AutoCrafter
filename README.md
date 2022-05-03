@@ -13,7 +13,7 @@ Usage: plan  <item>                         -- finds the crafting recipe and tur
 2) place chest above and below turtle 
 3) copy the following command into the turtle and press enter
 ```
-wget run https://github.com/GuitarMusashi616/AutoCrafter/blob/master/startup.lua
+wget run https://raw.githubusercontent.com/GuitarMusashi616/AutoCrafter/master/startup.lua
 ```
 
 #### Demo:

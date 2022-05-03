@@ -104,12 +104,14 @@ function Crafter:item_ings_min_stack_size(name)
   
   for i=1,remaining do
     local item = self:to_item(i, recipe)
-    local slot = self:find_slot(chest, item)
-    local max_stack_size = peripheral.call("top","getItemDetail",slot).maxCount
-    if max_stack_size == 1 then
-      return max_stack_size
-    elseif max_stack_size < min then
-      min = max_stack_size
+    if item then
+      local slot = self:find_slot(chest, item)
+      local max_stack_size = peripheral.call("top","getItemDetail",slot).maxCount
+      if max_stack_size == 1 then
+        return max_stack_size
+      elseif max_stack_size < min then
+        min = max_stack_size
+      end
     end
   end
   return min

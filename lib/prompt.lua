@@ -47,7 +47,7 @@ function Prompt:list_options(options, start_i, end_i)
 end
 
 function Prompt:pick_choice(prompt, options, options_to_display, limit)
-  limit = limit or 10
+  limit = limit or 8
   options_to_display = options_to_display or options
   local index = 0
   print("'next' for more options, 'q' to quit")
