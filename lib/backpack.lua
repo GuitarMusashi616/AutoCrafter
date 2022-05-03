@@ -70,6 +70,37 @@ function Backpack:__eq(other)
   return true
 end
 
+function Backpack:sorted(ascending)
+  -- creates new table of {item, count}
+  local tbl = {}
+  for item, count in pairs(self.backpack) do
+    tbl[#tbl+1] = {item, count}
+  end
+  
+  -- picks sorting function and sorts
+  local func = function(a,b) return a[2] > b[2] end
+  if ascending then
+    func = function(a,b) return a[2] < b[2] end
+  end
+  table.sort(tbl, func)
+  
+  -- returns custom iterator
+  local i = 0
+  return function()
+    i = i + 1
+    if not tbl[i] then
+      return
+    end
+    return tbl[i][1], tbl[i][2]
+  end
+end
+
+function Backpack:display(ascending)
+  for item, count in self:sorted(ascending) do
+    util.println("{}x {}", count, item)
+  end
+end
+
 function Backpack:__call()
   return pairs(self.backpack)
 end

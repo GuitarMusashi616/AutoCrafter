@@ -28,6 +28,10 @@ function peripheral.call()
   return {{name="minecraft:iron_ingot",count=64}, {name="minecraft:glass",count=64}}
 end
 
+function peripheral.getNames()
+  return {}
+end
+
 shell = {}
 
 function shell.run(string)

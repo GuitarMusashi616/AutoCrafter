@@ -3,6 +3,7 @@ local util = require "lib/util"
 local json = require "lib/json"
 local Backpack = require "lib/backpack"
 local Set = require "lib/set"
+require("lib/turtle")
 
 local all, range, len, print, println = util.all, util.range, util.len, util.print, util.println
 
