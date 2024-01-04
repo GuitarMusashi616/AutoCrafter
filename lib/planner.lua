@@ -7,7 +7,7 @@ local Set = require "lib/set"
 local Search = require "lib/search"
 local Prompt = require "lib/prompt"
 
-local search_inst = Search(true)
+local search_inst = Search()
 local prompt_inst = Prompt()
 
 local print, println, all, range, format = util.print, util.println, util.all, util.range, util.format
